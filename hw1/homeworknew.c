@@ -129,6 +129,9 @@ int main ( int argc, char *argv[] )
                 wr = encrypt(x, key);
                 middlestring[i]=wr;
                 i++;
+                if (i==3) {
+                  i = 0;
+                }
                 //putc(wr, out);
                    
             }
@@ -152,6 +155,9 @@ int main ( int argc, char *argv[] )
                 //wr = decrypt(x, key);
                 middlestring[i]=x;
                 i++;
+                if (i == 3) {
+                  i = 0;
+                }
                 //putc(wr, out);
             }
             Recover(MesHex,middlestring);
