@@ -6,6 +6,7 @@ import java.security.KeyStore;
 import javax.crypto.SecretKey;
 import javax.security.auth.callback.*;
 import java.security.PrivateKey;
+import java.security.PublicKey;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.UnrecoverableKeyException;
@@ -29,13 +30,23 @@ public class Homework4 {
 
 		    CertificateFactory cf = CertificateFactory.getInstance("X.509");
 
- 			while (bis.available() > 0) {
-    			Certificate cert = cf.generateCertificate(bis);
-    			System.out.println(cert.toString());
- 			}
+ 			//while (bis.available() > 0) {
+			Certificate cert = cf.generateCertificate(bis);
+			System.out.println(cert.toString());
 
- 			//Read the private key
+			PublicKey pubk = cert.getPublicKey();
+			byte[] pub64 = Base64.encodeBase64(pubk.getEncoded());
+			System.out.println("-----BEGIN RAGHU'S PUBLIC KEY-----");
+        	System.out.println( new String(pub64));
+        	System.out.println("-----END RAGHU'S PUBLIC KEY-----");
 
+        	//convert to X509 certificate in order to get signature
+        	X509Certificate t = (X509Certificate) cert;
+        	byte[] sig = t.getSignature();
+        	byte[] sig64 = Base64.encodeBase64(sig);
+        	
+
+ 			//Read and print the private key
  			String path = "Raghupri.pfx";
 		    char[] pass = "raghu".toCharArray();
 
@@ -43,17 +54,18 @@ public class Homework4 {
 		    ks.load(new FileInputStream(path), pass);
 		    String alias = (String) ks.aliases().nextElement(); 
 		    PrivateKey pk = (PrivateKey) ks.getKey(alias, pass);/* returns null */
-		    //Certificate[] chain = ks.getCertificateChain(alias);/* returns null */
-		    //X509Certificate last = (X509Certificate) chain[chain.length - 1];
-
-
-		    //Key key = ks.getKey(alias, "raghu".toCharArray())
+		    
         	byte[] b64 = Base64.encodeBase64(pk.getEncoded());
         	System.out.println("-----BEGIN PRIVATE KEY-----");
         	System.out.println( new String(b64 ));
         	System.out.println("-----END PRIVATE KEY-----");
-		    //System.out.println(last.getNotBefore());
-		    //System.out.println(last.toString());
+
+
+        	//Print the signature from Raghu's certificate
+        	System.out.println("-----RAGHU'S CERT SIGNATURE-----");
+    		System.out.println(new String(sig64));
+    		System.out.println("-----END RAGHU CERT SIGNATURE-----");
+		    
 
             // Always close files.
             bis.close();         
