@@ -1,0 +1,8 @@
+compile from command line with:
+
+javac Homework4.java -cp libs/commons-codec-1.10.jar
+
+then run it with command:
+
+java Homework4
+
